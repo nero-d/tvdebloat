@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.appletv.launcher">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_DREAM_STATE" />
+
+    <queries>
+        <package android:name="com.netflix.ninja" />
+        <package android:name="com.amazon.amazonvideo.livingroom" />
+        <package android:name="in.startv.hotstar" />
+        <package android:name="com.google.android.youtube.tv" />
+        <package android:name="com.apple.atve.androidtv.appletv" />
+        <package android:name="com.tcl.tv" />
+        <package android:name="com.tcl.tvinput" />
+
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="content" />
+        </intent>
+    </queries>
+
+    <application
+        android:label="Apple TV Home"
+        android:icon="@drawable/ic_launcher"
+        android:banner="@drawable/ic_launcher"
+        android:theme="@style/Theme.Launcher"
+        android:supportsRtl="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:clearTaskOnLaunch="false"
+            android:stateNotNeeded="true"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter android:priority="100">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- System-wide Remote App Button Listener (Netflix, YouTube, Prime Video) -->
+        <service
+            android:name=".RemoteButtonService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+    </application>
+</manifest>

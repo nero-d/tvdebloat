@@ -1,0 +1,905 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    android:background="@color/pitch_black">
+
+    <!-- 4K UHD Wallpaper Layer -->
+    <ImageView
+        android:id="@+id/ivWallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/wallpaper_mojave" />
+
+    <!-- Hero Backdrops Layer (Back - for smooth crossfade) -->
+    <ImageView
+        android:id="@+id/ivHeroBackdropBack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.0"
+        android:visibility="gone" />
+
+    <!-- Hero Backdrops Layer (Front - Active) -->
+    <ImageView
+        android:id="@+id/ivHeroBackdrop"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:alpha="0.0"
+        android:visibility="gone" />
+
+    <!-- Subtle Vignette to ensure clock, greeting, and dock retain crisp OLED contrast -->
+    <View
+        android:id="@+id/wallpaperVignette"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/wallpaper_vignette" />
+
+    <!-- Full-screen Ambient Glow Layer (Back - for smooth crossfade) -->
+    <View
+        android:id="@+id/ambientGlowViewBack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.0" />
+
+    <!-- Full-screen Ambient Glow Layer (Front - Active) -->
+    <View
+        android:id="@+id/ambientGlowView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="1.0" />
+
+    <!-- Focused App Header & Description (Title + Category Tagline) -->
+    <LinearLayout
+        android:id="@+id/heroMetadataLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="212dp"
+        android:orientation="vertical"
+        android:clipChildren="false">
+
+        <TextView
+            android:id="@+id/tvFocusedTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_white"
+            android:textSize="44sp"
+            android:fontFamily="@font/outfit_light"
+            android:letterSpacing="-0.02"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:shadowColor="#E0000000"
+            android:shadowDx="0"
+            android:shadowDy="2"
+            android:shadowRadius="10"
+            android:text="Netflix" />
+
+        <TextView
+            android:id="@+id/tvHeroTagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textColor="#B0FFFFFF"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:letterSpacing="0.04"
+            android:singleLine="true"
+            android:shadowColor="#D0000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="6"
+            android:text="Seinfeld • 9 Seasons • The Show About Nothing • 4K HDR" />
+    </LinearLayout>
+
+    <!-- Main Scrolling Content -->
+    <ScrollView
+        android:id="@+id/mainScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="60dp">
+
+            <!-- Spacing to place Dock at bottom of home view (y = 310dp) -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="305dp" />
+
+            <!-- Dock Rounded Band -->
+            <FrameLayout
+                android:id="@+id/dockBand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dock_band_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <LinearLayout
+                    android:id="@+id/dockRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layoutDirection="ltr"
+                    android:gravity="center"
+                    android:clipChildren="false"
+                    android:clipToPadding="false" />
+            </FrameLayout>
+
+            <!-- Favorite Series Section Header -->
+            <TextView
+                android:id="@+id/tvFavoritesHeader"
+                android:layout_width="832dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="38dp"
+                android:layout_marginBottom="12dp"
+                android:text="FAVORITE SERIES"
+                android:fontFamily="@font/outfit_regular"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:letterSpacing="0.12" />
+
+            <!-- Horizontal Carousel for Favorite Series -->
+            <HorizontalScrollView
+                android:id="@+id/favoritesScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingStart="64dp"
+                android:paddingEnd="64dp">
+
+                <LinearLayout
+                    android:id="@+id/favoritesRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layoutDirection="ltr"
+                    android:gravity="center_vertical"
+                    android:clipChildren="false"
+                    android:clipToPadding="false" />
+            </HorizontalScrollView>
+
+            <!-- All Apps Section Header -->
+            <TextView
+                android:id="@+id/tvAppsHeader"
+                android:layout_width="832dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="16dp"
+                android:text="ALL APPS"
+                android:fontFamily="@font/outfit_regular"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp"
+                android:letterSpacing="0.12" />
+
+            <!-- 4-Column All Apps Grid -->
+            <GridLayout
+                android:id="@+id/appsGrid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:columnCount="4"
+                android:orientation="horizontal"
+                android:layoutDirection="ltr"
+                android:alignmentMode="alignMargins"
+                android:columnOrderPreserved="false"
+                android:useDefaultMargins="false"
+                android:clipChildren="false"
+                android:clipToPadding="false" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Springing Glass Highlight overlay (disabled to remove inner rectangular borders) -->
+    <View
+        android:id="@+id/glassHighlight"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <!-- Top Bar Pinned to Top -->
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="48dp"
+        android:paddingEnd="48dp"
+        android:paddingTop="36dp">
+
+        <!-- Top Left Info (Greeting, Large Thin Clock, AM/PM, Divider, Date) -->
+        <LinearLayout
+            android:id="@+id/leftBlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/tvGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#8CFFFFFF"
+                android:textSize="12sp"
+                android:fontFamily="@font/outfit_regular"
+                android:letterSpacing="0.22"
+                android:textAllCaps="true"
+                android:layout_marginStart="2dp"
+                android:text="GOOD MORNING, NERO AND SANU!" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:baselineAligned="true"
+                android:layout_marginTop="2dp">
+
+                <TextView
+                    android:id="@+id/tvClock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFFFF"
+                    android:textSize="52sp"
+                    android:fontFamily="@font/outfit_light"
+                    android:letterSpacing="-0.04"
+                    android:includeFontPadding="false"
+                    android:text="8:02" />
+
+                <TextView
+                    android:id="@+id/tvAmPm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="15sp"
+                    android:fontFamily="@font/outfit_regular"
+                    android:letterSpacing="0.08"
+                    android:textAllCaps="true"
+                    android:text="AM" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#33FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="9dp"
+                    android:textColor="#A6FFFFFF"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/outfit_regular"
+                    android:letterSpacing="0.14"
+                    android:textAllCaps="true"
+                    android:singleLine="true"
+                    android:text="WEDNESDAY  21 OCTOBER" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Top Right Pills (Weather, Inputs, Wi-Fi, Settings) -->
+        <LinearLayout
+            android:id="@+id/topButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@id/leftBlock"
+            android:layout_marginBottom="12dp"
+            android:gravity="center_vertical">
+
+            <!-- Weather Pill -->
+            <TextView
+                android:id="@+id/btnWeather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pill_bg"
+                android:focusable="true"
+                android:clickable="true"
+                android:text="--°"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:fontFamily="@font/outfit_regular"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:layout_marginEnd="10dp" />
+
+            <!-- Inputs Pill -->
+            <TextView
+                android:id="@+id/btnInputs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pill_bg"
+                android:focusable="true"
+                android:clickable="true"
+                android:text="Inputs"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:fontFamily="@font/outfit_regular"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp"
+                android:layout_marginEnd="10dp" />
+
+            <!-- Control Center Pill -->
+            <TextView
+                android:id="@+id/btnControlCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/pill_bg"
+                android:focusable="true"
+                android:clickable="true"
+                android:text="Controls"
+                android:textColor="@color/text_white"
+                android:textSize="13sp"
+                android:fontFamily="@font/outfit_regular"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- Inputs Dropdown (Compact glass dropdown under Inputs pill) -->
+    <LinearLayout
+        android:id="@+id/inputsDropdown"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="106dp"
+        android:layout_marginEnd="100dp"
+        android:orientation="vertical"
+        android:background="@drawable/dropdown_bg"
+        android:padding="8dp"
+        android:elevation="18dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TV INPUTS"
+            android:textColor="@color/text_secondary"
+            android:textSize="11sp"
+            android:fontFamily="@font/outfit_regular"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="6dp" />
+
+        <TextView
+            android:id="@+id/optHdmi1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_item_bg"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="HDMI 1"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:padding="9dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/optHdmi2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_item_bg"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="HDMI 2"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:padding="9dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/optHdmi3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_item_bg"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="HDMI 3 (PlayStation 5)"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:padding="9dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/optAv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_item_bg"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="AV Input"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:padding="9dp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/optLiveTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/dropdown_item_bg"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="Live TV / Cable"
+            android:textColor="@color/text_white"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:padding="9dp" />
+    </LinearLayout>
+
+    <!-- Reorder Mode Floating Glass Pill (Apple TV style HUD) -->
+    <LinearLayout
+        android:id="@+id/hudReorder"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/pill_bg"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:visibility="gone"
+        android:elevation="30dp">
+
+        <TextView
+            android:id="@+id/tvReorderPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#EEFFFFFF"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:letterSpacing="0.04"
+            android:text="Move with D-Pad  \u2022  Press OK or Back when done" />
+    </LinearLayout>
+
+    <!-- Wallpaper HUD Floating Glass Pill (Apple TV style HUD) -->
+    <LinearLayout
+        android:id="@+id/hudWallpaper"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/pill_bg"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:visibility="gone"
+        android:elevation="30dp">
+
+        <TextView
+            android:id="@+id/tvWallpaperPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#EEFFFFFF"
+            android:textSize="13sp"
+            android:fontFamily="@font/outfit_regular"
+            android:letterSpacing="0.04"
+            android:text="Wallpaper  \u2022  Mojave Sand Dunes" />
+    </LinearLayout>
+
+    <!-- Control Center Dark Glass Scrim / Backdrop -->
+    <View
+        android:id="@+id/controlCenterScrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#70000000"
+        android:focusable="false"
+        android:clickable="true"
+        android:alpha="0.0"
+        android:visibility="gone"
+        android:elevation="40dp" />
+
+    <!-- Control Center Slide-Over Panel -->
+    <LinearLayout
+        android:id="@+id/controlCenterPanel"
+        android:layout_width="380dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end|top"
+        android:orientation="vertical"
+        android:background="@drawable/control_center_panel_bg"
+        android:elevation="45dp"
+        android:visibility="gone"
+        android:translationX="380dp"
+        android:paddingStart="22dp"
+        android:paddingEnd="22dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="14dp">
+
+        <!-- Header: Title & tvOS Status -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CONTROL CENTER"
+                android:textColor="#8CFFFFFF"
+                android:textSize="11sp"
+                android:fontFamily="@font/outfit_regular"
+                android:letterSpacing="0.22"
+                android:textAllCaps="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quick Controls &amp; Settings"
+                android:textColor="@color/text_white"
+                android:textSize="17sp"
+                android:fontFamily="@font/outfit_light"
+                android:letterSpacing="-0.01"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+
+        <!-- Scrollable cards container -->
+        <ScrollView
+            android:id="@+id/svControlCenter"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none"
+            android:overScrollMode="never">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Card 1: Wallpaper Selector -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/control_card_bg"
+                    android:padding="10dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="WALLPAPER THEME"
+                        android:textColor="#8CFFFFFF"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/outfit_regular"
+                        android:letterSpacing="0.14"
+                        android:layout_marginBottom="6dp" />
+
+                    <!-- Row 1: Mojave & Sonoma -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="5dp">
+
+                        <TextView
+                            android:id="@+id/ccWallMojave"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Mojave"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/ccWallSonoma"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Sonoma"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp" />
+                    </LinearLayout>
+
+                    <!-- Row 2: Westeros & Dynamic Hero -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ccWallGot"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="GoT Westeros"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/ccWallHero"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Dynamic Hero"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Card 2: Standby & Sleep -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/control_card_bg"
+                    android:padding="10dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="STANDBY &amp; SCREENSAVER"
+                        android:textColor="#8CFFFFFF"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/outfit_regular"
+                        android:letterSpacing="0.14"
+                        android:layout_marginBottom="6dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="5dp">
+
+                        <TextView
+                            android:id="@+id/ccBtnScreensaver"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Screensaver"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/ccBtnSleepTimer"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Timer: Off"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/ccBtnSleepNow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/control_btn_bg"
+                        android:focusable="true"
+                        android:clickable="true"
+                        android:text="Sleep Now"
+                        android:textColor="@color/text_white"
+                        android:textSize="12sp"
+                        android:fontFamily="@font/outfit_regular"
+                        android:gravity="center"
+                        android:paddingTop="7dp"
+                        android:paddingBottom="7dp" />
+                </LinearLayout>
+
+                <!-- Card 3: Audio & Glow Preferences -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/control_card_bg"
+                    android:padding="10dp"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="PREFERENCES"
+                        android:textColor="#8CFFFFFF"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/outfit_regular"
+                        android:letterSpacing="0.14"
+                        android:layout_marginBottom="6dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ccToggleSound"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Sound: ON"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/ccToggleGlow"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Ambient: ON"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Card 4: Network & Settings -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/control_card_bg"
+                    android:padding="10dp"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="NETWORK &amp; SYSTEM"
+                        android:textColor="#8CFFFFFF"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/outfit_regular"
+                        android:letterSpacing="0.14"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/ccTvNetworkInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Network: Connected \u2022 192.168.1.128"
+                        android:textColor="#B3FFFFFF"
+                        android:textSize="11sp"
+                        android:fontFamily="@font/outfit_regular"
+                        android:layout_marginBottom="6dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ccBtnWifi"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Wi-Fi"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp"
+                            android:layout_marginEnd="6dp" />
+
+                        <TextView
+                            android:id="@+id/ccBtnSettings"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/control_btn_bg"
+                            android:focusable="true"
+                            android:clickable="true"
+                            android:text="Settings"
+                            android:textColor="@color/text_white"
+                            android:textSize="12sp"
+                            android:fontFamily="@font/outfit_regular"
+                            android:gravity="center"
+                            android:paddingTop="7dp"
+                            android:paddingBottom="7dp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Bottom Close Prompt -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="6dp"
+            android:text="Press Back or Left to dismiss"
+            android:textColor="#66FFFFFF"
+            android:textSize="10sp"
+            android:fontFamily="@font/outfit_regular"
+            android:letterSpacing="0.06" />
+
+    </LinearLayout>
+
+</FrameLayout>

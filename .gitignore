@@ -1,0 +1,23 @@
+# Build output & binaries
+launcher/build/
+*.apk
+*.idsig
+
+# Debugging screenshots & xml dumps in root
+/uidump*.xml
+/screen_*.png
+/crop_*.png
+/debug_*.png
+/edges_*.png
+/test_*.png
+/current_screen.png
+/dumpkeys/
+*.class
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.bak
+.idea/
+.vscode/

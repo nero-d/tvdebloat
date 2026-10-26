@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:focusable="true"
+    android:clickable="true"
+    android:defaultFocusHighlightEnabled="false"
+    android:layout_marginStart="14dp"
+    android:layout_marginEnd="14dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <!-- Card Container (18dp Rounded Apple TV Tile) -->
+    <com.appletv.launcher.RoundedCardView
+        android:id="@+id/cardContainer"
+        android:layout_width="180dp"
+        android:layout_height="101dp"
+        android:clipToOutline="true"
+        android:defaultFocusHighlightEnabled="false"
+        android:background="@drawable/ic_launcher">
+
+        <com.appletv.launcher.RoundedImageView
+            android:id="@+id/ivBanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/ivIconFallback"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </com.appletv.launcher.RoundedCardView>
+
+    <!-- App Label Underneath -->
+    <TextView
+        android:id="@+id/tvLabel"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/text_white"
+        android:textSize="12sp"
+        android:fontFamily="@font/outfit_regular"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:gravity="center"
+        android:alpha="0.8" />
+</LinearLayout>

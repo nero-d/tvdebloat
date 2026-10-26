@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pitch_black">#000000</color>
+    <color name="dock_band">#161618</color>
+    <color name="dock_band_stroke">#2A2A2E</color>
+    <color name="pill_bg">#24FFFFFF</color>
+    <color name="pill_stroke">#3AFFFFFF</color>
+    <color name="pill_focused">#55FFFFFF</color>
+    <color name="glass_highlight">#28FFFFFF</color>
+    <color name="glass_stroke">#60FFFFFF</color>
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_secondary">#99FFFFFF</color>
+    <color name="dropdown_bg">#EE16161A</color>
+</resources>
