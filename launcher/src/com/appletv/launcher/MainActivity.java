@@ -66,17 +66,58 @@ import java.util.Set;
 public class MainActivity extends Activity {
 
     // Views
+    private static class GlassioIconPair {
+        final int unfocusedResId;
+        final int focusedResId;
+        GlassioIconPair(int unfocusedResId, int focusedResId) {
+            this.unfocusedResId = unfocusedResId;
+            this.focusedResId = focusedResId;
+        }
+    }
+
+    private static final Map<String, GlassioIconPair> GLASSIO_ICONS = new HashMap<>();
+    static {
+        GLASSIO_ICONS.put("com.netflix.ninja", new GlassioIconPair(R.drawable.glassio_netflix_white, R.drawable.glassio_netflix_color));
+        GLASSIO_ICONS.put("com.amazon.amazonvideo.livingroom", new GlassioIconPair(R.drawable.glassio_prime_white, R.drawable.glassio_prime_color));
+        GLASSIO_ICONS.put("in.startv.hotstar", new GlassioIconPair(R.drawable.glassio_hotstar_white, R.drawable.glassio_hotstar_color));
+        GLASSIO_ICONS.put("com.google.android.youtube.tv", new GlassioIconPair(R.drawable.glassio_youtube_white, R.drawable.glassio_youtube_color));
+        GLASSIO_ICONS.put("com.apple.atve.androidtv.appletv", new GlassioIconPair(R.drawable.glassio_appletv_white, R.drawable.glassio_appletv_color));
+        GLASSIO_ICONS.put("com.apple.atve.tcl.appletv", new GlassioIconPair(R.drawable.glassio_appletv_white, R.drawable.glassio_appletv_color));
+        GLASSIO_ICONS.put("com.stremio.one", new GlassioIconPair(R.drawable.glassio_stremio_white, R.drawable.glassio_stremio_color));
+        GLASSIO_ICONS.put("com.cricfytv.sports", new GlassioIconPair(R.drawable.glassio_cricfy_white, R.drawable.glassio_cricfy_color));
+        GLASSIO_ICONS.put("tv.airtel.xstream.tvapp", new GlassioIconPair(R.drawable.glassio_xstream_white, R.drawable.glassio_xstream_color));
+        GLASSIO_ICONS.put("com.sonyliv", new GlassioIconPair(R.drawable.glassio_sonyliv_white, R.drawable.glassio_sonyliv_color));
+        GLASSIO_ICONS.put("com.fancode.tv", new GlassioIconPair(R.drawable.glassio_fancode_white, R.drawable.glassio_fancode_color));
+        GLASSIO_ICONS.put("com.graymatrix.did", new GlassioIconPair(R.drawable.glassio_zee5_white, R.drawable.glassio_zee5_color));
+        GLASSIO_ICONS.put("org.videolan.vlc", new GlassioIconPair(R.drawable.glassio_vlc_white, R.drawable.glassio_vlc_color));
+        GLASSIO_ICONS.put("pl.solidexplorer2", new GlassioIconPair(R.drawable.glassio_solidexplorer_white, R.drawable.glassio_solidexplorer_color));
+        GLASSIO_ICONS.put("com.android.vending", new GlassioIconPair(R.drawable.glassio_playstore_white, R.drawable.glassio_playstore_color));
+        GLASSIO_ICONS.put("com.esaba.downloader", new GlassioIconPair(R.drawable.glassio_downloader_white, R.drawable.glassio_downloader_color));
+        GLASSIO_ICONS.put("com.yablio.sendfilestotv", new GlassioIconPair(R.drawable.glassio_sftv_white, R.drawable.glassio_sftv_color));
+        GLASSIO_ICONS.put("com.tcl.tv", new GlassioIconPair(R.drawable.glassio_tcltv_white, R.drawable.glassio_tcltv_color));
+        GLASSIO_ICONS.put("com.neilturner.aerialviews", new GlassioIconPair(R.drawable.glassio_aerialviews_white, R.drawable.glassio_aerialviews_color));
+        GLASSIO_ICONS.put("com.codingbuffalo.aerialdream", new GlassioIconPair(R.drawable.glassio_aerialviews_white, R.drawable.glassio_aerialviews_color));
+    }
+
     private FrameLayout rootView;
     private View ambientGlowView;
     private View ambientGlowViewBack;
     private TextView tvFocusedTitle;
     private ScrollView mainScrollView;
     private LinearLayout dockRow;
+    private FrameLayout dockContainer;
+    private HorizontalScrollView dockScrollView;
+    private TextView ccWallSeinfeld, ccWallFriends, ccWallBigBang, ccWallB99, ccWallModernFamily;
+    private FrameLayout launchZoomContainer;
+    private View vLaunchGlow;
+    private ImageView ivLaunchZoomIcon;
     private HorizontalScrollView favoritesScrollView;
     private LinearLayout favoritesRow;
     private GridLayout appsGrid;
     private View glassHighlight;
     private View topBar;
+    private TextView tvFavoritesHeader;
+    private final Handler keyHandler = new Handler(Looper.getMainLooper());
     private TextView tvGreeting;
     private TextView tvClock;
     private TextView tvAmPm;
@@ -253,7 +294,16 @@ public class MainActivity extends Activity {
         "com.netflix.ninja",                     // 1. Netflix
         "com.amazon.amazonvideo.livingroom",     // 2. Prime Video
         "in.startv.hotstar",                     // 3. JioHotstar
-        "com.google.android.youtube.tv"          // 4. YouTube
+        "com.google.android.youtube.tv",          // 4. YouTube
+        "com.apple.atve.androidtv.appletv",
+        "com.stremio.one",
+        "com.cricfytv.sports",
+        "tv.airtel.xstream.tvapp",
+        "com.sonyliv",
+        "com.fancode.tv",
+        "com.graymatrix.did",
+        "org.videolan.vlc",
+        "pl.solidexplorer2"
     };
 
     // Brand accent colors for ambient glow
@@ -491,6 +541,31 @@ public class MainActivity extends Activity {
             hideHeroViews();
             ivWallpaper.setVisibility(View.VISIBLE);
             ivWallpaper.setImageResource(R.drawable.wallpaper_got);
+            wallpaperVignette.setVisibility(View.VISIBLE);
+        } else if ("seinfeld".equalsIgnoreCase(theme)) {
+            hideHeroViews();
+            ivWallpaper.setVisibility(View.VISIBLE);
+            ivWallpaper.setImageResource(R.drawable.hero_seinfeld);
+            wallpaperVignette.setVisibility(View.VISIBLE);
+        } else if ("friends".equalsIgnoreCase(theme)) {
+            hideHeroViews();
+            ivWallpaper.setVisibility(View.VISIBLE);
+            ivWallpaper.setImageResource(R.drawable.hero_friends);
+            wallpaperVignette.setVisibility(View.VISIBLE);
+        } else if ("bigbang".equalsIgnoreCase(theme)) {
+            hideHeroViews();
+            ivWallpaper.setVisibility(View.VISIBLE);
+            ivWallpaper.setImageResource(R.drawable.hero_bigbang);
+            wallpaperVignette.setVisibility(View.VISIBLE);
+        } else if ("b99".equalsIgnoreCase(theme)) {
+            hideHeroViews();
+            ivWallpaper.setVisibility(View.VISIBLE);
+            ivWallpaper.setImageResource(R.drawable.hero_b99);
+            wallpaperVignette.setVisibility(View.VISIBLE);
+        } else if ("modernfamily".equalsIgnoreCase(theme)) {
+            hideHeroViews();
+            ivWallpaper.setVisibility(View.VISIBLE);
+            ivWallpaper.setImageResource(R.drawable.hero_modernfamily);
             wallpaperVignette.setVisibility(View.VISIBLE);
         } else if ("sonoma".equalsIgnoreCase(theme)) {
             hideHeroViews();
@@ -981,7 +1056,17 @@ public class MainActivity extends Activity {
         dockRow = findViewById(R.id.dockRow);
         favoritesScrollView = findViewById(R.id.favoritesScrollView);
         favoritesRow = findViewById(R.id.favoritesRow);
-        appsGrid = findViewById(R.id.appsGrid);
+        dockContainer = findViewById(R.id.dockContainer);
+        dockScrollView = findViewById(R.id.dockScrollView);
+        tvFavoritesHeader = findViewById(R.id.tvFavoritesHeader);
+        ccWallSeinfeld = findViewById(R.id.ccWallSeinfeld);
+        ccWallFriends = findViewById(R.id.ccWallFriends);
+        ccWallBigBang = findViewById(R.id.ccWallBigBang);
+        ccWallB99 = findViewById(R.id.ccWallB99);
+        ccWallModernFamily = findViewById(R.id.ccWallModernFamily);
+        launchZoomContainer = findViewById(R.id.launchZoomContainer);
+        vLaunchGlow = findViewById(R.id.vLaunchGlow);
+        ivLaunchZoomIcon = findViewById(R.id.ivLaunchZoomIcon);
         glassHighlight = findViewById(R.id.glassHighlight);
         topBar = findViewById(R.id.topBar);
         tvGreeting = findViewById(R.id.tvGreeting);
@@ -2509,7 +2594,17 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void launchSeries(SeriesItem item) {
+    private void launchSeries(final SeriesItem item) {
+        if (item == null) return;
+        animateAppLaunch(getCurrentFocus(), new Runnable() {
+            @Override
+            public void run() {
+                executeLaunchSeries(item);
+            }
+        }, item.accentColor);
+    }
+
+    private void launchSeriesDirect(SeriesItem item) {
         playSoundClick();
         try {
             if ("com.netflix.ninja".equals(item.packageName)) {
@@ -2555,17 +2650,46 @@ public class MainActivity extends Activity {
         tile.setTag(app);
         ImageView ivBanner = tile.findViewById(R.id.ivBanner);
         ImageView ivIconFallback = tile.findViewById(R.id.ivIconFallback);
+        ImageView ivIconUnfocused = tile.findViewById(R.id.ivIconUnfocused);
+        ImageView ivIconFocused = tile.findViewById(R.id.ivIconFocused);
         TextView tvLabel = tile.findViewById(R.id.tvLabel);
 
-        tvLabel.setText(app.label);
-        if (app.banner != null) {
-            ivBanner.setImageDrawable(app.banner);
-            ivIconFallback.setVisibility(View.GONE);
-            ivBanner.setVisibility(View.VISIBLE);
+        if (tvLabel != null) {
+            tvLabel.setText(app.label);
+            tvLabel.setVisibility(View.GONE);
+        }
+
+        boolean hasFocus = tile.hasFocus();
+        GlassioIconPair pair = GLASSIO_ICONS.get(app.packageName);
+        if (pair != null) {
+            if (ivIconUnfocused != null) {
+                ivIconUnfocused.setImageResource(pair.unfocusedResId);
+                ivIconUnfocused.setVisibility(View.VISIBLE);
+                ivIconUnfocused.setAlpha(hasFocus ? 0.0f : 1.0f);
+            }
+            if (ivIconFocused != null) {
+                ivIconFocused.setImageResource(pair.focusedResId);
+                ivIconFocused.setVisibility(View.VISIBLE);
+                ivIconFocused.setAlpha(hasFocus ? 1.0f : 0.0f);
+            }
+            if (ivBanner != null) ivBanner.setVisibility(View.GONE);
+            if (ivIconFallback != null) ivIconFallback.setVisibility(View.GONE);
         } else {
-            ivBanner.setVisibility(View.GONE);
-            ivIconFallback.setVisibility(View.VISIBLE);
-            ivIconFallback.setImageDrawable(app.icon);
+            if (ivIconUnfocused != null) ivIconUnfocused.setVisibility(View.GONE);
+            if (ivIconFocused != null) ivIconFocused.setVisibility(View.GONE);
+            if (app.banner != null) {
+                if (ivBanner != null) {
+                    ivBanner.setImageDrawable(app.banner);
+                    ivBanner.setVisibility(View.VISIBLE);
+                }
+                if (ivIconFallback != null) ivIconFallback.setVisibility(View.GONE);
+            } else {
+                if (ivBanner != null) ivBanner.setVisibility(View.GONE);
+                if (ivIconFallback != null) {
+                    ivIconFallback.setImageDrawable(app.icon);
+                    ivIconFallback.setVisibility(View.VISIBLE);
+                }
+            }
         }
     }
 
@@ -2582,6 +2706,7 @@ public class MainActivity extends Activity {
     }
 
     private void buildGridViews() {
+        if (appsGrid == null) return;
         appsGrid.removeAllViews();
         gridTileViews.clear();
 
@@ -2931,7 +3056,7 @@ public class MainActivity extends Activity {
         saveGridAppOrder();
     }
 
-    private void onTileFocused(View tile, AppItem app, boolean isDock) {
+    private void onTileFocused(View tile, final AppItem app, boolean isDock) {
         if (isUserNavigating) {
             playSoundNavigate();
         }
@@ -3061,6 +3186,10 @@ public class MainActivity extends Activity {
                 .setInterpolator(new DecelerateInterpolator())
                 .start();
         }
+        ImageView ivFocused = tile.findViewById(R.id.ivIconFocused);
+        ImageView ivUnfocused = tile.findViewById(R.id.ivIconUnfocused);
+        if (ivFocused != null) ivFocused.animate().alpha(0.0f).setDuration(150).start();
+        if (ivUnfocused != null) ivUnfocused.animate().alpha(1.0f).setDuration(150).start();
 
         // Dim tile name underneath
         TextView tvLabel = tile.findViewById(R.id.tvLabel);
@@ -3217,9 +3346,191 @@ public class MainActivity extends Activity {
         return gradient;
     }
 
-    private void launchApp(AppItem app) {
-        launchPackage(app.packageName);
+    private void launchApp(final AppItem app) {
+        if (app == null) return;
+        int glow = BRAND_COLORS.containsKey(app.packageName) ? BRAND_COLORS.get(app.packageName) : app.accentColor;
+        animateAppLaunch(getCurrentFocus(), new Runnable() {
+            @Override
+            public void run() {
+                executeLaunchApp(app);
+            }
+        }, glow);
     }
+
+    private void centerDockInScrollView(View view) {
+        if (dockScrollView == null || view == null) return;
+        int scrollX = (view.getLeft() + view.getRight()) / 2 - dockScrollView.getWidth() / 2;
+        dockScrollView.smoothScrollTo(Math.max(0, scrollX), 0);
+    }
+
+    private void saveDockAppOrder() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < dockApps.size(); i++) {
+            if (i > 0) sb.append(",");
+            sb.append(dockApps.get(i).packageName);
+        }
+        getSharedPreferences(PREF_NAME, MODE_PRIVATE)
+            .edit()
+            .putString("dock_order", sb.toString())
+            .apply();
+    }
+
+    private void moveDockItem(int fromIndex, int toIndex) {
+        if (fromIndex < 0 || fromIndex >= dockApps.size() || toIndex < 0 || toIndex >= dockApps.size() || fromIndex == toIndex) return;
+        AppItem item = dockApps.remove(fromIndex);
+        dockApps.add(toIndex, item);
+        buildDockViews();
+        reorderActiveIndex = toIndex;
+        if (toIndex >= 0 && toIndex < dockTileViews.size()) {
+            View target = dockTileViews.get(toIndex);
+            target.requestFocus();
+            centerDockInScrollView(target);
+            applyReorderVisuals(target);
+            if (tvReorderPrompt != null) {
+                tvReorderPrompt.setText("Moving " + item.label + "  •  Use Left/Right D-Pad  •  OK Done");
+            }
+        }
+        saveDockAppOrder();
+    }
+
+    private boolean isDpadKey(int keyCode) {
+        return keyCode == KeyEvent.KEYCODE_DPAD_UP 
+            || keyCode == KeyEvent.KEYCODE_DPAD_DOWN 
+            || keyCode == KeyEvent.KEYCODE_DPAD_LEFT 
+            || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT;
+    }
+
+    private void animateAppLaunch(final View tileView, final Runnable onComplete, int glowColor) {
+        playSoundClick();
+        if (tileView == null || launchZoomContainer == null || ivLaunchZoomIcon == null) {
+            if (onComplete != null) onComplete.run();
+            return;
+        }
+
+        View card = tileView.findViewById(R.id.cardContainer);
+        if (card == null) card = tileView;
+
+        int[] tilePos = new int[2];
+        card.getLocationOnScreen(tilePos);
+        int[] containerPos = new int[2];
+        launchZoomContainer.getLocationOnScreen(containerPos);
+
+        int startX = tilePos[0] - containerPos[0];
+        int startY = tilePos[1] - containerPos[1];
+        int cardW = card.getWidth();
+        int cardH = card.getHeight();
+
+        ImageView ivFocused = tileView.findViewById(R.id.ivIconFocused);
+        ImageView ivUnfocused = tileView.findViewById(R.id.ivIconUnfocused);
+        ImageView ivBanner = tileView.findViewById(R.id.ivBanner);
+        ImageView ivFallback = tileView.findViewById(R.id.ivIconFallback);
+        Drawable iconDrawable = null;
+
+        if (ivFocused != null && ivFocused.getVisibility() == View.VISIBLE && ivFocused.getAlpha() > 0.5f) {
+            iconDrawable = ivFocused.getDrawable();
+        } else if (ivUnfocused != null && ivUnfocused.getVisibility() == View.VISIBLE) {
+            iconDrawable = ivUnfocused.getDrawable();
+        } else if (ivBanner != null && ivBanner.getVisibility() == View.VISIBLE) {
+            iconDrawable = ivBanner.getDrawable();
+        } else if (ivFallback != null && ivFallback.getVisibility() == View.VISIBLE) {
+            iconDrawable = ivFallback.getDrawable();
+        }
+
+        if (iconDrawable != null) {
+            ivLaunchZoomIcon.setImageDrawable(iconDrawable);
+        }
+
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) ivLaunchZoomIcon.getLayoutParams();
+        if (lp != null) {
+            lp.width = cardW;
+            lp.height = cardH;
+            lp.leftMargin = startX;
+            lp.topMargin = startY;
+            ivLaunchZoomIcon.setLayoutParams(lp);
+        }
+
+        if (vLaunchGlow != null) {
+            GradientDrawable glow = new GradientDrawable();
+            glow.setShape(GradientDrawable.OVAL);
+            glow.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+            glow.setGradientRadius(Math.max(cardW, cardH) * 1.5f);
+            glow.setColors(new int[]{ Color.argb(180, Color.red(glowColor), Color.green(glowColor), Color.blue(glowColor)), Color.TRANSPARENT });
+            vLaunchGlow.setBackground(glow);
+            vLaunchGlow.setAlpha(0.0f);
+        }
+
+        launchZoomContainer.setVisibility(View.VISIBLE);
+        ivLaunchZoomIcon.setScaleX(1.0f);
+        ivLaunchZoomIcon.setScaleY(1.0f);
+        ivLaunchZoomIcon.setAlpha(1.0f);
+
+        ivLaunchZoomIcon.animate()
+            .scaleX(1.4f)
+            .scaleY(1.4f)
+            .alpha(0.0f)
+            .setDuration(450)
+            .setInterpolator(new AccelerateInterpolator())
+            .start();
+
+        if (vLaunchGlow != null) {
+            vLaunchGlow.animate()
+                .alpha(1.0f)
+                .setDuration(300)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (vLaunchGlow != null) vLaunchGlow.animate().alpha(0.0f).setDuration(200).start();
+                    }
+                })
+                .start();
+        }
+
+        if (mainScrollView != null) {
+            mainScrollView.animate().alpha(0.0f).setDuration(350).start();
+        }
+        if (topBar != null) {
+            topBar.animate().alpha(0.0f).setDuration(350).start();
+        }
+
+        keyHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (launchZoomContainer != null) launchZoomContainer.setVisibility(View.GONE);
+                if (mainScrollView != null) mainScrollView.setAlpha(1.0f);
+                if (topBar != null) topBar.setAlpha(1.0f);
+                if (onComplete != null) onComplete.run();
+            }
+        }, 550);
+    }
+
+    private void executeLaunchApp(AppItem app) {
+        if (app != null) launchPackage(app.packageName);
+    }
+
+    private void executeLaunchSeries(SeriesItem series) {
+        if (series != null) launchSeriesDirect(series);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (idleHandler != null) {
+            idleHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (!hasFocus) {
+            if (idleHandler != null) {
+                idleHandler.removeCallbacksAndMessages(null);
+            }
+        } else {
+            resetIdleTimer();
+        }
+    }
+
 
     private void launchPackage(String packageName) {
         try {

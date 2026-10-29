@@ -1,53 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:focusable="true"
-    android:clickable="true"
-    android:defaultFocusHighlightEnabled="false"
-    android:layout_marginStart="14dp"
-    android:layout_marginEnd="14dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="6dp"
-    android:clipChildren="false"
-    android:clipToPadding="false">
-
-    <!-- Card Container (18dp Rounded Apple TV Tile) -->
-    <com.appletv.launcher.RoundedCardView
-        android:id="@+id/cardContainer"
-        android:layout_width="180dp"
-        android:layout_height="101dp"
-        android:clipToOutline="true"
-        android:defaultFocusHighlightEnabled="false"
-        android:background="@drawable/ic_launcher">
-
-        <com.appletv.launcher.RoundedImageView
-            android:id="@+id/ivBanner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop" />
-
-        <ImageView
-            android:id="@+id/ivIconFallback"
-            android:layout_width="54dp"
-            android:layout_height="54dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-    </com.appletv.launcher.RoundedCardView>
-
-    <!-- App Label Underneath -->
-    <TextView
-        android:id="@+id/tvLabel"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/text_white"
-        android:textSize="12sp"
-        android:fontFamily="@font/outfit_regular"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:gravity="center"
-        android:alpha="0.8" />
-</LinearLayout>
+<?xml version="1.0" ?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" android:focusable="true" android:clickable="true" android:clipChildren="false" android:clipToPadding="false" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:layout_marginStart="2dp" android:layout_marginEnd="2dp" android:defaultFocusHighlightEnabled="false">
+    <FrameLayout android:id="@+id/cardContainer" android:background="@android:color/transparent" android:layout_width="96dp" android:layout_height="60dp" android:defaultFocusHighlightEnabled="false">
+        <ImageView android:id="@+id/ivIconUnfocused" android:padding="3dp" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitCenter" android:alpha="1"/>
+        <ImageView android:id="@+id/ivIconFocused" android:padding="3dp" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitCenter" android:alpha="0"/>
+        <ImageView android:id="@+id/ivBanner" android:padding="3dp" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="fitCenter"/>
+        <ImageView android:layout_gravity="center" android:id="@+id/ivIconFallback" android:visibility="gone" android:layout_width="36dp" android:layout_height="36dp"/>
+    </FrameLayout>
+    <TextView android:id="@+id/tvLabel" android:visibility="gone" android:layout_width="0dp" android:layout_height="0dp"/>
+</FrameLayout>
